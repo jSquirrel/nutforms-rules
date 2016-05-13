@@ -1,7 +1,5 @@
 # Nutforms Rules
 
-[![Build Status](https://travis-ci.org/jSquirrel/nutforms-rules.svg?branch=master)](https://travis-ci.org/jSquirrel/nutforms-rules)
-
 Maven module for integrating server-side portion of business rules into Nutforms.
 
 ## Installation
