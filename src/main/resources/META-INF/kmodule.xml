@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="userbase" packages="rules.userentity">
+        <ksession name="usersession" type="stateless"/>
+    </kbase>
+    <kbase name="accountbase" packages="rules.account">
+        <ksession name="accountsession" type="stateless"/>
+    </kbase>
+    <kbase name="globalbase" packages="*">
+        <ksession name="globalsession" type="stateless"/>
+    </kbase>
+</kmodule>

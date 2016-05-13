@@ -67,4 +67,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+*.iml
+
 # Created by .ignore support plugin (hsz.mobi)
