@@ -37,16 +37,21 @@ public class RuleServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // toDo: set HTTP statuses
         String context = req.getPathInfo();
         if (context == null || context.isEmpty()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("Please specify a package/context.");
         } else if (!contexts.containsKey(context.substring(1).replaceAll("/", "."))) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("No such context is available.");
         } else {
             Set<Rule> requestedRules = inspector.inspectPackage(contexts.get(context.substring(1).replaceAll("/", ".")));
-            resp.getWriter().write(requestedRules == null || requestedRules.isEmpty() ?
-                    String.format("No rules found in package %s", context) : new Gson().toJson(requestedRules));
+            if (requestedRules == null || requestedRules.isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write(String.format("No rules found in package %s", context));
+            } else {
+                resp.getWriter().write(new Gson().toJson(requestedRules));
+            }
         }
     }
 }
