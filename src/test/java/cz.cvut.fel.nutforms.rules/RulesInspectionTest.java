@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 public class RulesInspectionTest {
 
     private KieContainer kieContainer;
-    private StatelessKieSession accountSession;
 
     private Inspector inspector;
 
@@ -39,9 +38,6 @@ public class RulesInspectionTest {
         // KieSession creation
         KieServices kieServices = KieServices.Factory.get();
         kieContainer = kieServices.getKieClasspathContainer();
-        // Specific session will be created here
-        accountSession = kieContainer.newStatelessKieSession("accountsession");
-        accountSession.setGlobal("status", "verified");
 
         inspector = new Inspector();
     }
