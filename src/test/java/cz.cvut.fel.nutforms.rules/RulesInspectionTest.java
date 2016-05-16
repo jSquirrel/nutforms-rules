@@ -1,6 +1,7 @@
 package cz.cvut.fel.nutforms.rules;
 
 import cz.cvut.fel.nutforms.rules.inspection.Inspector;
+import cz.cvut.fel.nutforms.rules.metamodel.Declaration;
 import org.drools.core.base.mvel.MVELCompilationUnit;
 import org.drools.core.definitions.rule.impl.RuleImpl;
 import org.drools.core.rule.Pattern;
@@ -21,33 +22,43 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.*;
+
 /**
  * Rules model inspection test.
  */
 public class RulesInspectionTest {
 
-    private StatelessKieSession kieSession;
+    private KieContainer kieContainer;
+    private StatelessKieSession accountSession;
+
+    private Inspector inspector;
 
     @Before
     public void setUp() throws Exception {
         // KieSession creation
         KieServices kieServices = KieServices.Factory.get();
-        KieContainer kieContainer = kieServices.getKieClasspathContainer();
+        kieContainer = kieServices.getKieClasspathContainer();
         // Specific session will be created here
-        kieSession = kieContainer.newStatelessKieSession("accountsession");
-        kieSession.setGlobal("status", "verified");
+        accountSession = kieContainer.newStatelessKieSession("accountsession");
+        accountSession.setGlobal("status", "verified");
+
+        inspector = new Inspector();
     }
 
     @Test
     public void inspectUserEntityRules() {
-        Collection<KiePackage> kiePackages = kieSession.getKieBase().getKiePackages();
+        StatelessKieSession userSession = kieContainer.newStatelessKieSession("usersession");
+        Collection<KiePackage> kiePackages = userSession.getKieBase().getKiePackages();
+        assertEquals(2, kiePackages.size());    // 2 pkgs, the other one is imported from entity
         for (KiePackage kiePackage : kiePackages) {
-            if (kiePackage.getRules().size() > 0) {
-                System.out.println(kiePackage.getRules().size() + " rule(s) found in package " + kiePackage.getName() + ":");
-                for (Rule rule : kiePackage.getRules()) {
-                    inspectRule((RuleImpl) rule);
-                    System.out.println();
-                }
+            if (kiePackage.getName().equals("cz.cvut.fel.nutforms.rules.entity")) {
+                continue;
+            }
+            assertEquals(3, kiePackage.getRules().size());
+            assertEquals("userentity", kiePackage.getName());
+            for (Rule rule : kiePackage.getRules()) {
+                assertUserEntityRules(inspector.inspectRule((RuleImpl) rule));
             }
         }
     }
@@ -56,10 +67,17 @@ public class RulesInspectionTest {
      * Tests functionality of {@link Inspector#inspectBase(KieBase)}
      */
     @Test
-    public void testInspectRule() {
-        Inspector inspector = new Inspector();
-        Map<String, Set<cz.cvut.fel.nutforms.rules.metamodel.Rule>> rules = inspector.inspectBase(kieSession.getKieBase());
-        // toDo: add some asserts
+    public void testInspectBase() {
+        StatelessKieSession userSession = kieContainer.newStatelessKieSession("usersession");
+        Map<String, Set<cz.cvut.fel.nutforms.rules.metamodel.Rule>> packages = inspector.inspectBase(userSession.getKieBase());
+        assertEquals(1, packages.size());
+        for (Map.Entry<String, Set<cz.cvut.fel.nutforms.rules.metamodel.Rule>> packageRules : packages.entrySet()) {
+            assertEquals(3, packageRules.getValue().size());
+            assertEquals("userentity", packageRules.getKey());
+            for (cz.cvut.fel.nutforms.rules.metamodel.Rule rule : packageRules.getValue()) {
+                assertUserEntityRules(rule);
+            }
+        }
     }
 
     /**
@@ -79,7 +97,6 @@ public class RulesInspectionTest {
         System.out.println("\tConstraints: ");
         for (RuleConditionElement ruleConditionElement : rule.getLhs().getChildren()) {
             for (Constraint constraint : ((Pattern) ruleConditionElement).getConstraints()) {
-                //toDo: use reflection to get class name instead of toString
                 System.out.println("\t\t" + "Object type: " + ((Pattern) ruleConditionElement).getObjectType());
                 System.out.println("\t\t" + ((MvelConstraint) constraint).getExpression());
             }
@@ -89,14 +106,49 @@ public class RulesInspectionTest {
             try {
                 Field unit = rule.getConsequence().getClass().getDeclaredField("unit");
                 unit.setAccessible(true);
-                //is reflection needed?
                 System.out.println("\t\t" + ((MVELCompilationUnit) unit.get(rule.getConsequence())).getExpression());
-            } catch (NoSuchFieldException e) {
-                //toDo: show more user friendly message, log stack trace (add slf4j dependency)
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void assertRule(cz.cvut.fel.nutforms.rules.metamodel.Rule rule, String name, String pckg, String condition) {
+        assertEquals(name, rule.getName());
+        assertEquals(pckg, rule.getPckg());
+        assertEquals(condition, rule.getCondition());
+    }
+
+    private void assertDeclaration(Declaration declaration, String name, String type, String entity, String field) {
+        assertEquals(name, declaration.getName());
+        assertEquals(type, declaration.getType());
+        assertEquals(entity, declaration.getEntity());
+        assertEquals(field, declaration.getField());
+    }
+
+    private void assertUserEntityRules(cz.cvut.fel.nutforms.rules.metamodel.Rule inspectedRule) {
+        Declaration status = inspectedRule.getGlobals().get("$status");
+        assertDeclaration(status, "$status", "java.lang.String", null, null);
+        switch (inspectedRule.getName()) {
+            case "Is adult":
+                assertRule(inspectedRule, "Is adult", "userentity", "age >= 18");
+                assertEquals(1, inspectedRule.getDeclarations().size());
+                assertDeclaration(inspectedRule.getDeclarations().get("$user"), "$user",
+                        "cz.cvut.fel.nutforms.rules.entity.UserEntity", null, null);
+                break;
+            case "Password is long enough":
+                assertRule(inspectedRule, "Password is long enough", "userentity",
+                        "$password.length() > 5 && $password.length() < 20");
+                assertDeclaration(inspectedRule.getDeclarations().get("$user"), "$user",
+                        "cz.cvut.fel.nutforms.rules.entity.UserEntity", null, null);
+                assertDeclaration(inspectedRule.getDeclarations().get("$password"), "$password",
+                        "java.lang.String", "cz.cvut.fel.nutforms.rules.entity.UserEntity", "password");
+                break;
+            case "Is verified":
+                assertRule(inspectedRule, "Is verified", "userentity", "$status == \"verified\"");
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected rule in usersession: " + inspectedRule.getName());
         }
     }
 }

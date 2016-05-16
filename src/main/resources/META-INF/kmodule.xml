@@ -6,6 +6,9 @@
     <kbase name="accountbase" packages="rules.account">
         <ksession name="accountsession" type="stateless"/>
     </kbase>
+    <kbase name="testbase" packages="rules.testing">
+        <ksession name="testsession" type="stateless"/>
+    </kbase>
     <kbase name="globalbase" packages="*">
         <ksession name="globalsession" type="stateless"/>
     </kbase>
