@@ -42,6 +42,16 @@ This part of the Nutforms library is responsible for transforming the rule aspec
 
 [Example project build upon the Nutforms library](https://github.com/jSquirrel/nutforms-example)
 
+### Architecture
+
+The `entity` and `functions` packages are used to declare entites and global functions to be used in the tests. These do not affect the core functionality.
+
+Package `inspection` contains the Inspector class, which is used to transform the Drools rule into a POJO. Also, the  package *interpreter* is located here, which contains experimental classes used to build a expression tree of the rule condition. The *interpreter* package is currently not used when transforming the rules.
+
+Package `metamodel` contains various classes of the meta-model that is used to store the information from the rules. This object is then transferred to target domain, currently, to the presentation layer.
+
+Lastly, package `servlet` contains the definition of the Java Servlet used to transfer the rules from the server to the client.
+
 ### Registering the servlet
 
 In order to retrieve the rules from the server, the servlet needs to be registered in the `web.xml` file.
