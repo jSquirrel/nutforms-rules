@@ -36,17 +36,17 @@ This software is provided under [MIT License](https://opensource.org/licenses/MI
 
 ## Documentation
 
-This part of the Nutforms library is responsible for transforming the rule aspect described in your application into POJO, which can be then transferred to various parts of the application. Also, it defines Java Servlet which is used to transfer the rules to client side.
+This part of the Nutforms library is responsible for transforming the rule aspect described in your application into POJO, which can be then transferred to various parts of the application. Also, it defines Java Servlet which is used to transfer the rules to the client side.
 
-*Note: in order to use the rule modules, Nutforms library must be loaded into the project as well.*
+*Note: in order to use the rule module, Nutforms library must be loaded into the project as well.*
 
-[Example project build upon the Nutforms library](https://github.com/jSquirrel/nutforms-example)
+[Example project built upon the Nutforms library](https://github.com/jSquirrel/nutforms-example)
 
 ### Architecture
 
-The `entity` and `functions` packages are used to declare entites and global functions to be used in the tests. These do not affect the core functionality.
+The `entity` and `functions` packages are used to declare entites and global functions to be used in tests. These do not affect the core functionality.
 
-Package `inspection` contains the Inspector class, which is used to transform the Drools rule into a POJO. Also, the  package *interpreter* is located here, which contains experimental classes used to build a expression tree of the rule condition. The *interpreter* package is currently not used when transforming the rules.
+Package `inspection` contains the Inspector class, which is used to transform the Drools rule into a POJO. Also, the  package *interpreter* is located here, which contains experimental classes used to build a expression tree out of the rule condition. The *interpreter* package is currently not used when transforming the rules.
 
 Package `metamodel` contains various classes of the meta-model that is used to store the information from the rules. This object is then transferred to target domain, currently, to the presentation layer.
 
@@ -56,7 +56,7 @@ Lastly, package `servlet` contains the definition of the Java Servlet used to tr
 
 In order to retrieve the rules from the server, the servlet needs to be registered in the `web.xml` file.
 
-```
+```xml
 <servlet>
     <servlet-name>RuleServlet</servlet-name>
     <servlet-class>cz.cvut.fel.nutforms.rules.servlet.RuleServlet</servlet-class>
