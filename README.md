@@ -1,5 +1,7 @@
 # Nutforms Rules Server
 
+[![Build Status](https://travis-ci.org/jSquirrel/nutforms-rules-server.svg?branch=master)](https://travis-ci.org/jSquirrel/nutforms-rules-server)
+
 Module for integrating server-side portion of business rules with the Nutforms library.
 
 The Nutforms library consists of following modules:
