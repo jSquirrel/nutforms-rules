@@ -1,0 +1,8 @@
+cz.cvut.fel.nutforms.rules
+cz.cvut.fel.nutforms.rules.entity
+cz.cvut.fel.nutforms.rules.functions
+cz.cvut.fel.nutforms.rules.inspection
+cz.cvut.fel.nutforms.rules.inspection.interpreter
+cz.cvut.fel.nutforms.rules.metamodel
+cz.cvut.fel.nutforms.rules.metamodel.condition
+cz.cvut.fel.nutforms.rules.servlet

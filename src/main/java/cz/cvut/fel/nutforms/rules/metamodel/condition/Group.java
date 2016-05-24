@@ -1,7 +1,7 @@
 package cz.cvut.fel.nutforms.rules.metamodel.condition;
 
 /**
- * Implementation of logical operators "||", "&&" and ","
+ * Implementation of logical operators "||", "&amp;&amp;" and ","
  */
 public class Group extends Condition {
 
@@ -21,7 +21,7 @@ public class Group extends Condition {
     /**
      * Get left {@link Condition} of the operator
      *
-     * @return
+     * @return left {@link Condition}
      */
     public Condition getLeft() {
         return left;
@@ -34,7 +34,7 @@ public class Group extends Condition {
     /**
      * Get right {@link Condition} of the operator
      *
-     * @return
+     * @return right {@link Condition}
      */
     public Condition getRight() {
         return right;

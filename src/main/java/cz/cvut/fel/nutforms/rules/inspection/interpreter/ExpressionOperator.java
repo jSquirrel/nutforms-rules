@@ -3,7 +3,7 @@ package cz.cvut.fel.nutforms.rules.inspection.interpreter;
 import cz.cvut.fel.nutforms.rules.metamodel.condition.Group;
 
 /**
- * Represents "&&", "||" and "," logical operators for stack usage.
+ * Represents "&amp;&amp;", "||" and "," logical operators for stack usage.
  */
 public class ExpressionOperator implements ExpressionElement {
 
