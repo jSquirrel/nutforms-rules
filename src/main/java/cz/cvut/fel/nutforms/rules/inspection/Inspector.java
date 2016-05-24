@@ -28,8 +28,8 @@ public class Inspector {
     /**
      * Inspects a specific Drools rule and creates a {@link Rule} object from it.
      *
-     * @param droolsRule
-     * @return
+     * @param droolsRule instance of a Drools rule parsed from a .drl file
+     * @return custom {@link Rule}
      */
     public Rule inspectRule(RuleImpl droolsRule) {
         Rule rule = new Rule();
@@ -53,7 +53,6 @@ public class Inspector {
                         rule.getGlobals().put(entry.getKey(), declaration);
                     }
                     for (Function function : knowledgePackage.getFunctions().values()) {
-                        // toDo: test functionality
                         rule.getFunctions().add(function.getName());
                     }
                 }
@@ -174,59 +173,4 @@ public class Inspector {
         }
         return rulesMap;
     }
-
-//    /**
-//     * Creates a {@link Condition} from given Drools {@link ConditionalElement} object. If the condition contains
-//     * logical grouping elements, groups them into {@link Group}.
-//     *
-//     * @param conditionElement
-//     * @return
-//     */
-//    private Condition createCondition(RuleConditionElement conditionElement) {
-//        Condition condition;
-//        if (conditionElement instanceof org.drools.core.rule.Pattern) {
-//            condition = new Pattern();
-//            for (Constraint constraint : ((org.drools.core.rule.Pattern) conditionElement).getConstraints()) {
-//                if (constraint instanceof MvelConstraint) {
-//                    ((Pattern) condition).getConstraints().add(((MvelConstraint) constraint).getExpression());
-//                } else {
-//                    throw new IllegalArgumentException("Constraint type not supported: " +
-//                            constraint.getClass().getName());
-//                }
-//            }
-//        } else if (conditionElement instanceof EvalCondition) {
-//            condition = new Eval();
-//            ((Eval) condition).setConstraint(((EvalCondition) conditionElement).getEvalExpression().toString());
-//        } else {
-//            throw new IllegalArgumentException("Condition class not supported: " +
-//                    conditionElement.getClass().getName());
-//        }
-//    }
-//
-//    /**
-//     * Creates a {@link Group} condition if given constraint contains logical operators "&&", "||", or ",";
-//     *
-//     * @param constraint
-//     * @return
-//     */
-//    private Condition createGroupCondition(Constraint constraint) {
-//        if (constraint instanceof MvelConstraint) {
-//            String expression = ((MvelConstraint) constraint).getExpression();
-//            Group group = new Group();
-//            if (expression.contains("||")) {
-//
-//            } else if (expression.contains("&&")) {
-//
-//            } else if (expression.contains(",")) {
-//
-//            } else {
-//                Pattern pattern = new Pattern();
-//                pattern.getConstraints().add(expression);
-//                return pattern;
-//            }
-//        } else {
-//            throw new IllegalArgumentException("Constraint type not supported: " +
-//                    constraint.getClass().getName());
-//        }
-//    }
 }

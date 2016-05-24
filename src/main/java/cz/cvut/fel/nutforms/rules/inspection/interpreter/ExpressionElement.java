@@ -1,7 +1,7 @@
 package cz.cvut.fel.nutforms.rules.inspection.interpreter;
 
 /**
- * Created by Ondřej Kratochvíl on 2.5.15.
+ * Common interface for elements of an expression
  */
 public interface ExpressionElement {
 

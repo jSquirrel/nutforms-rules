@@ -15,8 +15,8 @@ public class ExpressionInterpreter {
     /**
      * Interprets given string and builds respective {@link Condition} tree.
      *
-     * @param expression
-     * @return
+     * @param expression string to be parsed to {@link Condition} tree
+     * @return {@link Condition} tree
      */
     public Condition interpret(String expression) {
         int bracketCount = 0;   // opening bracket count, used for distinguishing top level conditions
@@ -130,8 +130,8 @@ public class ExpressionInterpreter {
     /**
      * Parses the content of the stack of prefix notation conditions into one complex {@link Condition}
      *
-     * @param stack
-     * @return
+     * @param stack stack of elements
+     * @return created {@link Condition}
      */
     private Condition interpretStack(Stack<ExpressionElement> stack) {
         Condition condition = null;
@@ -166,8 +166,8 @@ public class ExpressionInterpreter {
     /**
      * Returns true, if the amount of opening and closing brackets within given string is equal
      *
-     * @param s
-     * @return
+     * @param s expression
+     * @return true if amount of brackets in given string is equal
      */
     private boolean areBracketsEven(String s) {
         int opening = 0,closing = 0;

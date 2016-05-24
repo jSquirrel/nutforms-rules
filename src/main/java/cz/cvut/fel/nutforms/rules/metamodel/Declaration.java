@@ -16,7 +16,7 @@ public class Declaration {
     /**
      * Get name of the variable
      *
-     * @return
+     * @return name of variable
      */
     public String getName() {
         return name;
@@ -30,7 +30,7 @@ public class Declaration {
      * Get name of entity, where the field is declared (null if the variable is not a field
      * of an entity)
      *
-     * @return
+     * @return name of entity
      */
     public String getEntity() {
         return entity;
@@ -44,7 +44,7 @@ public class Declaration {
      * Get name of the field from which the value of this variable is taken (null if the variable is not a field
      * of an entity)
      *
-     * @return
+     * @return name of field
      */
     public String getField() {
         return field;
@@ -57,7 +57,7 @@ public class Declaration {
     /**
      * Data type of the variable
      *
-     * @return
+     * @return type of variable
      */
     public String getType() {
         return type;
